@@ -11,12 +11,17 @@
   <link href="https://fonts.googleapis.com/css?family=Pangolin:400,700|Proxima+Nova" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="style.css" />
   <script src="script.js" defer="true"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
-<body>
-
-  <header>
-
+<body class="mx-auto" style="width: 700px;
+">
+  <header class="header d-flex justify-content-between align-items-center mx-auto">
+    <h6 class="text-danger font-weight-bold">WPR</h6>
+    <div class="header__right">
+      <span>M</span><span>E</span><span>R</span><span>N</span>
+    </div>
   </header>
 
   <article>
@@ -26,14 +31,58 @@
     </section>
 
     <section id="introduction">
+      <div id="author">By Minh Nguyen</div>
+      <h3>The test</h3>
+      <section>The test contains 10 questions and there is no time limit</section>
+      <section>
+        The test is not official, it's just a nice way to see how much you know, or don't know, about HTML.
+      </section>
+      <h3>Count Your Score</h3>
+      <section>
+        You will get 1 point for each correct answer. At the end of the Quiz, your total score will be displayed.
+        Maximum score is 10 points.
+      </section>
     </section>
 
     <section id="attempt-quiz">
+      <div id="start-screen">
+        <h3>Start the quiz</h3>
+        <div>Good luck!</div>
+        <button>Start the HTML quiz</button>
+      </div>
     </section>
 
     <section id="review-quiz">
+      <div class="answer-box">
+        <!-- <div> -->
+        <h3>Question 1 of 10</h3>
+        <div class="answer-box__questions">question 1</div>
+        <div class="answer-box__choice-list">
+          <div class="answer-box__choice">
+            <input type="radio" name="question1" value="option1">
+            <span>option 1</span>
+          </div>
+          <div class=" answer-box__choice">
+            <input type="radio" name="question1" value="option2">
+            <span>option 2</span>
+          </div>
+          <div class="answer-box__choice">
+            <input type="radio" name="question1" value="option3">
+            <span>option 3</span>
+          </div>
+          <div class="answer-box__choice">
+            <input type="radio" name="question1" value="option4">
+            <span>option 4</span>
+          </div>
+        </div>
+        <!-- </div> -->
+      </div>
+
+
     </section>
   </article>
+  <script src="./script.js"></script>
+
 </body>
 
 </html>
