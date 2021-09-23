@@ -8,16 +8,13 @@
   <title>HTML Quiz</title>
   <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32" />
   <link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16" />
-  <link href="https://fonts.googleapis.com/css?family=Pangolin:400,700|Proxima+Nova" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <script src="script.js" defer="true"></script>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
-<body class="mx-auto" style="width: 700px;
-">
-  <header class="header d-flex justify-content-between align-items-center mx-auto">
+<body>
+  <header class="header">
     <h6 class="text-danger font-weight-bold">WPR</h6>
     <div class="header__right">
       <span>M</span><span>E</span><span>R</span><span>N</span>
@@ -48,13 +45,25 @@
       <div id="start-screen">
         <h3>Start the quiz</h3>
         <div>Good luck!</div>
-        <button>Start the HTML quiz</button>
+        <button id="start-button">Start the HTML quiz <strong>></strong></button>
       </div>
     </section>
 
-    <section id="review-quiz">
-      <div class="answer-box">
-        <!-- <div> -->
+    <section id="quiz-box">
+
+    </section>
+
+    <section id="submit-quiz">
+      <button id="submit-button">Submit your answers <strong>></strong></button>
+    </section>
+  </article>
+  <script src="./script.js"></script>
+
+</body>
+
+</html>
+
+<!-- <div class="answer-box">
         <h3>Question 1 of 10</h3>
         <div class="answer-box__questions">question 1</div>
         <div class="answer-box__choice-list">
@@ -75,14 +84,4 @@
             <span>option 4</span>
           </div>
         </div>
-        <!-- </div> -->
-      </div>
-
-
-    </section>
-  </article>
-  <script src="./script.js"></script>
-
-</body>
-
-</html>
+      </div> -->
