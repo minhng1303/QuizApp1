@@ -50,10 +50,11 @@ function renderAnswerBox(question, index) {
     input.name = "option" + (index + 1);
     input.value = answer;
     input.setAttribute("_id", questionId);
-    // create span DOM for answer
-    const span = document.createElement("span");
-    span.textContent = answer;
-    divChoice.append(input, span);
+    // create label DOM for answer
+    const label = document.createElement("label");
+    label.textContent = answer;
+    label.setAttribute("for", answer);
+    divChoice.append(input, label);
     divChoiceList.appendChild(divChoice);
   });
 
@@ -85,7 +86,7 @@ function handleChooseAnswer(e) {
       return;
     }
     // for choose another answer
-    if (e.target.nodeName == "SPAN") {
+    if (e.target.nodeName == "LABEL") {
       e.target.previousElementSibling.checked = true;
     }
     for (let key in arr) {
