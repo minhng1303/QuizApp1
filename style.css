@@ -80,7 +80,7 @@ body {
 #attempt-quiz {
   background: #f1f1f1;
   border: #dcdcdc 1px solid;
-  font-size: 24px;
+  font-size: 1.3rem;
   padding: 1rem;
   margin: 30px 0;
 }
@@ -90,22 +90,22 @@ body {
 }
 
 #start-screen h3 {
-  margin: 36px 0 18px 0;
+  margin: 2rem 0 1rem 0;
 }
 
 #start-screen div {
-  margin-bottom: 36px;
+  margin-bottom: 2rem;
 }
 
-#start-screen button {
-  margin-bottom: 18px;
+.primary-button {
+  margin-bottom: 1rem;
   padding: 18px;
   border: none;
   color: white;
   background: #2196f3;
 }
 
-#attempt-quiz button:hover {
+.primary-button:hover {
   background: #0d8bf2;
 }
 
@@ -123,11 +123,17 @@ body {
 }
 
 .answer-box__choice {
+  min-height: 1rem;
   background: #f1f1f1;
   border: 0.3px solid white;
   padding: 15px;
   display: flex;
   align-items: center;
+  word-break: break-word;
+}
+
+.answer-box__choice * {
+  pointer-events: none;
 }
 
 .answer-box__choice input {
@@ -145,7 +151,7 @@ body {
 #submit-quiz {
   background: #f1f1f1;
   border: #dcdcdc 1px solid;
-  font-size: 24px;
+  font-size: 1.3rem;
   padding: 1rem;
   margin: 30px 0;
   display: flex;
@@ -155,7 +161,7 @@ body {
 }
 
 #submit-quiz button {
-  padding: 18px;
+  padding: 1rem;
   border: none;
   color: white;
   background: #4caf50;
@@ -163,4 +169,110 @@ body {
 
 #submit-quiz button:hover {
   background: #46a049;
+}
+
+.correct-answer {
+  background-color: #d4edda;
+}
+
+.wrong-answer {
+  background-color: #f8d7da;
+}
+
+.default-answer {
+  background-color: #ddd;
+}
+
+.result-box {
+  margin-left: auto;
+  background: rgba(0, 0, 0, 0.2);
+  font-size: 0.8rem;
+  color: white;
+  padding: 0.3rem;
+  text-align: center;
+}
+
+#try-again {
+  background: #f1f1f1;
+  border: #dcdcdc 1px solid;
+  /* font-size: 1.3rem; */
+  padding: 1rem;
+  margin: 1.8rem 0;
+  display: none;
+}
+
+#try-again * {
+  display: block;
+  text-align: center;
+  margin: 1.2rem auto;
+}
+
+#score {
+  font-size: 24px;
+}
+
+#try-again div {
+  margin-bottom: 36px;
+}
+
+@media screen and (max-width: 700px) {
+  body {
+    font-size: 16px;
+    width: 95%;
+  }
+
+  .header h6 {
+    font-size: 25px;
+  }
+
+  .header__right span {
+    font-size: 12px;
+    margin: 0 0.5rem;
+    height: 35px;
+    width: 35px;
+  }
+
+  #quiz-name {
+    background-image: url("./images/background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 210px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #quiz-name h1 {
+    font-family: "Pangolin", "Trebuchet MS", "cursive";
+    font-size: 40px;
+    color: black;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    max-width: 50%;
+  }
+
+  @media screen and (max-width: 500px) {
+    body {
+      font-size: 14px;
+    }
+
+    .header h6 {
+      font-size: 25px;
+    }
+
+    .header__right span {
+      display: none;
+    }
+
+    #quiz-name {
+      width: 100%;
+    }
+
+    #quiz-name h1 {
+      font-size: 25px;
+      max-width: 50%;
+    }
+  }
 }

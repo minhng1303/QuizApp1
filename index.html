@@ -5,10 +5,12 @@
 
 <head>
   <meta charset="utf-8">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
   <title>HTML Quiz</title>
   <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32" />
   <link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16" />
   <link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css" />
   <script src="script.js" defer="true"></script>
 </head>
@@ -45,17 +47,26 @@
       <div id="start-screen">
         <h3>Start the quiz</h3>
         <div>Good luck!</div>
-        <button id="start-button">Start the HTML quiz <strong>></strong></button>
+        <button class="primary-button" id="start-button">Start the HTML quiz <strong>></strong></button>
       </div>
+    </section>
+
+    <section id="submit-quiz">
+      <button id="submit-button">Submit your answers <strong>></strong></button>
     </section>
 
     <section id="quiz-box">
 
     </section>
 
-    <section id="submit-quiz">
-      <button id="submit-button">Submit your answers <strong>></strong></button>
+    <section id="try-again">
+      <h2>Result</h2>
+      <span id="score">5/10</span>
+      <strong>50%</strong>
+      <span>Practice more to improve it :D</span>
+      <button class="primary-button">Try again</button>
     </section>
+
   </article>
   <script src="./script.js"></script>
 
