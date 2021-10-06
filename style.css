@@ -172,15 +172,15 @@ body {
 }
 
 .correct-answer {
-  background-color: #d4edda;
+  background-color: #d4edda !important;
 }
 
 .wrong-answer {
-  background-color: #f8d7da;
+  background-color: #f8d7da !important;
 }
 
 .default-answer {
-  background-color: #ddd;
+  background-color: #ddd !important;
 }
 
 .result-box {

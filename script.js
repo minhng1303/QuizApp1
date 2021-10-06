@@ -5,11 +5,16 @@ let introduction = document.querySelector("#introduction");
 let quizBox = document.querySelector("#quiz-box"); // quiz box containing all answer box
 let submitBox = document.querySelector("#submit-quiz"); // submit box
 let resultBox = document.querySelector("#try-again");
+let redoButton = document.querySelector("#try-again-button");
+let score = resultBox.querySelector("#score");
+let scorePercent = resultBox.querySelector("#score-percent");
+let scoreText = resultBox.querySelector("#score-text");
 
 // properties
 let quizLength = 0;
 let quizQuestions = []; // contain all questions
 let quizAnswers = {}; // contain all answers of the user
+let correctAnswers = []; // contain alll correct answers
 let quizId = "0"; // contain the id of the quiz
 let divChoice;
 let divChoiceList;
@@ -21,6 +26,7 @@ startButton.addEventListener("click", handleStart);
 submitBox.addEventListener("click", submitQuiz);
 
 function handleStart() {
+  quizBox.style.display = "block";
   fetch(QUIZ_API, {
     method: "POST",
   })
@@ -28,8 +34,11 @@ function handleStart() {
       return res.json();
     })
     .then((data) => {
+      handleChoose = {};
+      console.log(data);
       quizLength = data.questions.length;
       quizQuestions = data.questions;
+      console.log(quizQuestions);
       quizId = data._id;
       SUBMIT_API = `https://wpr-quiz-api.herokuapp.com/attempts/${quizId}/submit`;
       // hide the Start Box and Test Introduction and display the test
@@ -80,9 +89,8 @@ function renderAnswerBox(question, number) {
   quizBox.appendChild(divAnswerBox);
 }
 
-let handleChoose = function (e, question, _answer) {
+function handleChoose(e, question, _answer) {
   quizAnswers[question._id] = _answer;
-  console.log(quizAnswers);
   if (e.target.className.includes("selected-answer")) {
     e.target.classList.remove("selected-answer");
     e.target.children[0].checked = false;
@@ -100,7 +108,7 @@ let handleChoose = function (e, question, _answer) {
   }
   e.target.classList.add("selected-answer");
   e.target.children[0].checked = true;
-};
+}
 
 function submitQuiz() {
   fetch(SUBMIT_API, {
@@ -111,46 +119,52 @@ function submitQuiz() {
       return res.json();
     })
     .then((data) => {
-      handleChoose = function () {};
+      // handleChoose = function () {};
+      correctAnswers = data.correctAnswers;
       submitBox.style.display = "none";
       resultBox.style.display = "block";
-      let body = document.querySelectorAll("#quiz-box input");
-      body.forEach((ele) => (ele.disabled = true));
+      score.textContent = data.score;
+      scoreText.text = data.scoreText;
+
       let answerBoxChoiceList = document.querySelectorAll(
         ".answer-box__choice-list"
       );
-      for (let key in answerBoxChoiceList) {
-        if (key % 2 == 0) {
+      answerBoxChoiceList.forEach((choiceList) => {
+        let input = choiceList.querySelectorAll("input");
+        input.forEach((ele) => (ele.disabled = true));
+        let questionId = choiceList.childNodes[0].getAttribute("_id");
+        let correct = choiceList.childNodes[correctAnswers[questionId]];
+        let userChoice = choiceList.childNodes[quizAnswers[questionId]];
+        if (correctAnswers[questionId] == quizAnswers[questionId]) {
+          correct.classList.add("correct-answer");
           let span = document.createElement("span");
-          span.className = "result-box";
-          span.textContent = "Correct Answer";
-          answerBoxChoiceList[key].firstElementChild.appendChild(span);
-          answerBoxChoiceList[key].firstElementChild.classList.add(
-            "correct-answer"
-          );
-          answerBoxChoiceList[key].firstElementChild.childNodes[0].checked =
-            "true";
+          span.textContent = "Correct answer";
+          span.classList.add("result-box");
+          correct.appendChild(span);
         } else {
-          const span = document.createElement("span");
-          span.className = "result-box";
-          span.textContent = "Your Answer";
-
-          const span1 = document.createElement("span");
-          span1.className = "result-box";
-          span1.textContent = "Correct Answer";
-
-          answerBoxChoiceList[key].firstElementChild?.appendChild(span);
-          answerBoxChoiceList[key].firstElementChild?.classList.add(
-            "wrong-answer"
-          );
-          answerBoxChoiceList[
-            key
-          ].firstElementChild.firstElementChild.checked = true;
-          answerBoxChoiceList[key].childNodes[1].classList.add(
-            "default-answer"
-          );
-          answerBoxChoiceList[key].childNodes[1].appendChild(span1);
+          correct.classList.add("default-answer");
+          let span = document.createElement("span");
+          span.textContent = "Correct answer";
+          span.classList.add("result-box");
+          correct.appendChild(span);
+          if (userChoice) {
+            userChoice.classList.add("wrong-answer");
+            let span = document.createElement("span");
+            span.textContent = "Your answer";
+            span.classList.add("result-box");
+            userChoice.appendChild(span);
+          }
         }
-      }
+      });
     });
 }
+
+function redoQuiz() {
+  // console.log("hello");
+  quizBox.innerHTML = "";
+  submitBox.style.display = "none";
+  resultBox.style.display = "none";
+  introduction.style.display = "block";
+  startBox.style.display = "block";
+}
+redoButton.addEventListener("click", redoQuiz);
