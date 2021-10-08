@@ -1,4 +1,5 @@
 // DOM elements
+let header = document.querySelector("header");
 let startButton = document.querySelector("#start-button");
 let startBox = document.querySelector("#attempt-quiz");
 let introduction = document.querySelector("#introduction");
@@ -27,6 +28,9 @@ submitBox.addEventListener("click", submitQuiz);
 
 function handleStart() {
   quizBox.style.display = "block";
+  startBox.style.display = "none";
+  introduction.style.display = "none";
+  scrollToTop();
   fetch(QUIZ_API, {
     method: "POST",
   })
@@ -34,23 +38,59 @@ function handleStart() {
       return res.json();
     })
     .then((data) => {
-      handleChoose = {};
-      console.log(data);
       quizLength = data.questions.length;
       quizQuestions = data.questions;
-      console.log(quizQuestions);
       quizId = data._id;
       SUBMIT_API = `https://wpr-quiz-api.herokuapp.com/attempts/${quizId}/submit`;
-      // hide the Start Box and Test Introduction and display the test
-      submitBox.style.display = "flex";
-      startBox.style.display = "none";
-      introduction.style.display = "none";
-
       // create box for each question
       quizQuestions.map((question, index) => {
         renderAnswerBox(question, index);
       });
+      submitBox.style.display = "flex";
     });
+}
+
+function handleChoose(e) {
+  let _answer = parseInt(e.target.getAttribute("_answer"));
+  let _questionId = e.target.getAttribute("_id");
+  console.log(_questionId);
+  if (e.target.className.includes("selected-answer")) {
+    e.target.classList.remove("selected-answer");
+    e.target.children[0].checked = false;
+    delete quizAnswers[_questionId];
+    return;
+  }
+  quizAnswers[_questionId] = _answer;
+  console.log(quizAnswers);
+  let selectedAnswer = e.target.parentElement.querySelector(
+    ".answer-box__choice.selected-answer"
+  );
+  if (selectedAnswer) {
+    selectedAnswer.classList.remove("selected-answer");
+  }
+  e.target.classList.toggle("selected-answer");
+  e.target.children[0].checked = true;
+}
+
+function handle(question, index, e) {
+  console.log(e.target.getAttribute("_id"));
+  console.log(e.target.getAttribute("_answer"));
+  if (e.target.className.includes("selected-answer")) {
+    e.target.classList.remove("selected-answer");
+    e.target.children[0].checked = false;
+    delete quizAnswers[question._id];
+    return;
+  }
+  quizAnswers[question._id] = index;
+  console.log(quizAnswers);
+  let selectedAnswer = e.target.parentElement.querySelector(
+    ".answer-box__choice.selected-answer"
+  );
+  if (selectedAnswer) {
+    selectedAnswer.classList.remove("selected-answer");
+  }
+  e.target.classList.toggle("selected-answer");
+  e.target.children[0].checked = true;
 }
 
 function renderAnswerBox(question, number) {
@@ -62,22 +102,23 @@ function renderAnswerBox(question, number) {
   question.answers.map((answer, index) => {
     divChoice = document.createElement("div");
     divChoice.className = "answer-box__choice";
+
     // create input DOM
     const input = document.createElement("input");
     input.type = "radio";
     input.name = "option" + (number + 1);
     input.value = answer;
+
     // create label DOM for answer
     const label = document.createElement("label");
     label.textContent = answer;
     label.setAttribute("for", answer);
+
+    // append to divChoice
     divChoice.append(input, label);
     divChoice.setAttribute("_id", questionId);
     divChoice.setAttribute("_answer", index);
-
-    divChoice.addEventListener("click", () =>
-      handleChoose(event, question, index)
-    );
+    divChoice.addEventListener("click", handleChoose);
     divChoiceList.appendChild(divChoice);
   });
 
@@ -89,28 +130,9 @@ function renderAnswerBox(question, number) {
   quizBox.appendChild(divAnswerBox);
 }
 
-function handleChoose(e, question, _answer) {
-  quizAnswers[question._id] = _answer;
-  if (e.target.className.includes("selected-answer")) {
-    e.target.classList.remove("selected-answer");
-    e.target.children[0].checked = false;
-    return;
-  }
-  let arr = e.target.parentElement.children;
-  for (let key in arr) {
-    if (
-      arr[key] instanceof Element &&
-      arr[key].className.includes("selected-answer")
-    ) {
-      arr[key].classList.remove("selected-answer");
-      e.target.children[0].checked = false;
-    }
-  }
-  e.target.classList.add("selected-answer");
-  e.target.children[0].checked = true;
-}
-
 function submitQuiz() {
+  submitBox.style.display = "none";
+  scrollToTop();
   fetch(SUBMIT_API, {
     method: "POST",
     body: JSON.stringify(quizAnswers),
@@ -119,19 +141,20 @@ function submitQuiz() {
       return res.json();
     })
     .then((data) => {
-      // handleChoose = function () {};
       correctAnswers = data.correctAnswers;
-      submitBox.style.display = "none";
       resultBox.style.display = "block";
       score.textContent = data.score;
-      scoreText.text = data.scoreText;
+      scoreText.textContent = data.scoreText;
 
       let answerBoxChoiceList = document.querySelectorAll(
         ".answer-box__choice-list"
       );
       answerBoxChoiceList.forEach((choiceList) => {
-        let input = choiceList.querySelectorAll("input");
-        input.forEach((ele) => (ele.disabled = true));
+        let answerBoxList = choiceList.querySelectorAll(".answer-box__choice");
+        answerBoxList.forEach((ele) => {
+          ele.querySelector("input").disabled = true;
+          ele.removeEventListener("click", handleChoose);
+        });
         let questionId = choiceList.childNodes[0].getAttribute("_id");
         let correct = choiceList.childNodes[correctAnswers[questionId]];
         let userChoice = choiceList.childNodes[quizAnswers[questionId]];
@@ -160,7 +183,7 @@ function submitQuiz() {
 }
 
 function redoQuiz() {
-  // console.log("hello");
+  scrollToTop();
   quizBox.innerHTML = "";
   submitBox.style.display = "none";
   resultBox.style.display = "none";
@@ -168,3 +191,9 @@ function redoQuiz() {
   startBox.style.display = "block";
 }
 redoButton.addEventListener("click", redoQuiz);
+
+function scrollToTop() {
+  header.scrollIntoView(true, {
+    behavior: "smooth",
+  });
+}
