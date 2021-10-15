@@ -25,6 +25,7 @@ let SUBMIT_API;
 
 startButton.addEventListener("click", handleStart);
 submitBox.addEventListener("click", submitQuiz);
+redoButton.addEventListener("click", redoQuiz);
 
 function handleStart() {
   quizBox.style.display = "block";
@@ -53,7 +54,6 @@ function handleStart() {
 function handleChoose(e) {
   let _answer = parseInt(e.target.getAttribute("_answer"));
   let _questionId = e.target.getAttribute("_id");
-  console.log(_questionId);
   if (e.target.className.includes("selected-answer")) {
     e.target.classList.remove("selected-answer");
     e.target.children[0].checked = false;
@@ -61,28 +61,6 @@ function handleChoose(e) {
     return;
   }
   quizAnswers[_questionId] = _answer;
-  console.log(quizAnswers);
-  let selectedAnswer = e.target.parentElement.querySelector(
-    ".answer-box__choice.selected-answer"
-  );
-  if (selectedAnswer) {
-    selectedAnswer.classList.remove("selected-answer");
-  }
-  e.target.classList.toggle("selected-answer");
-  e.target.children[0].checked = true;
-}
-
-function handle(question, index, e) {
-  console.log(e.target.getAttribute("_id"));
-  console.log(e.target.getAttribute("_answer"));
-  if (e.target.className.includes("selected-answer")) {
-    e.target.classList.remove("selected-answer");
-    e.target.children[0].checked = false;
-    delete quizAnswers[question._id];
-    return;
-  }
-  quizAnswers[question._id] = index;
-  console.log(quizAnswers);
   let selectedAnswer = e.target.parentElement.querySelector(
     ".answer-box__choice.selected-answer"
   );
@@ -131,55 +109,62 @@ function renderAnswerBox(question, number) {
 }
 
 function submitQuiz() {
-  submitBox.style.display = "none";
-  scrollToTop();
-  fetch(SUBMIT_API, {
-    method: "POST",
-    body: JSON.stringify(quizAnswers),
-  })
-    .then((res) => {
-      return res.json();
+  if (confirm("Are you sure to finish this quiz?")) {
+    submitBox.style.display = "none";
+    scrollToTop();
+    fetch(SUBMIT_API, {
+      method: "POST",
+      body: JSON.stringify({ answers: { ...quizAnswers } }),
+      headers: {
+        "Content-Type": "application/json",
+      },
     })
-    .then((data) => {
-      correctAnswers = data.correctAnswers;
-      resultBox.style.display = "block";
-      score.textContent = data.score;
-      scoreText.textContent = data.scoreText;
-
-      let answerBoxChoiceList = document.querySelectorAll(
-        ".answer-box__choice-list"
-      );
-      answerBoxChoiceList.forEach((choiceList) => {
-        let answerBoxList = choiceList.querySelectorAll(".answer-box__choice");
-        answerBoxList.forEach((ele) => {
-          ele.querySelector("input").disabled = true;
-          ele.removeEventListener("click", handleChoose);
-        });
-        let questionId = choiceList.childNodes[0].getAttribute("_id");
-        let correct = choiceList.childNodes[correctAnswers[questionId]];
-        let userChoice = choiceList.childNodes[quizAnswers[questionId]];
-        if (correctAnswers[questionId] == quizAnswers[questionId]) {
-          correct.classList.add("correct-answer");
-          let span = document.createElement("span");
-          span.textContent = "Correct answer";
-          span.classList.add("result-box");
-          correct.appendChild(span);
-        } else {
-          correct.classList.add("default-answer");
-          let span = document.createElement("span");
-          span.textContent = "Correct answer";
-          span.classList.add("result-box");
-          correct.appendChild(span);
-          if (userChoice) {
-            userChoice.classList.add("wrong-answer");
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        correctAnswers = data.correctAnswers;
+        resultBox.style.display = "block";
+        score.textContent = `${data.score}/${quizLength}`;
+        scoreText.textContent = data.scoreText;
+        scorePercent.textContent = `${(data.score / quizLength) * 100}%`;
+        let answerBoxChoiceList = document.querySelectorAll(
+          ".answer-box__choice-list"
+        );
+        answerBoxChoiceList.forEach((choiceList) => {
+          let answerBoxList = choiceList.querySelectorAll(
+            ".answer-box__choice"
+          );
+          answerBoxList.forEach((ele) => {
+            ele.querySelector("input").disabled = true;
+            ele.removeEventListener("click", handleChoose);
+          });
+          let questionId = choiceList.childNodes[0].getAttribute("_id");
+          let correct = choiceList.childNodes[correctAnswers[questionId]];
+          let userChoice = choiceList.childNodes[quizAnswers[questionId]];
+          if (correctAnswers[questionId] == quizAnswers[questionId]) {
+            correct.classList.add("correct-answer");
             let span = document.createElement("span");
-            span.textContent = "Your answer";
+            span.textContent = "Correct answer";
             span.classList.add("result-box");
-            userChoice.appendChild(span);
+            correct.appendChild(span);
+          } else {
+            correct.classList.add("default-answer");
+            let span = document.createElement("span");
+            span.textContent = "Correct answer";
+            span.classList.add("result-box");
+            correct.appendChild(span);
+            if (userChoice) {
+              userChoice.classList.add("wrong-answer");
+              let span = document.createElement("span");
+              span.textContent = "Your answer";
+              span.classList.add("result-box");
+              userChoice.appendChild(span);
+            }
           }
-        }
+        });
       });
-    });
+  }
 }
 
 function redoQuiz() {
@@ -189,8 +174,12 @@ function redoQuiz() {
   resultBox.style.display = "none";
   introduction.style.display = "block";
   startBox.style.display = "block";
+  quizLength = 0;
+  quizQuestions = [];
+  quizAnswers = {};
+  correctAnswers = [];
+  quizId = "0";
 }
-redoButton.addEventListener("click", redoQuiz);
 
 function scrollToTop() {
   header.scrollIntoView(true, {
