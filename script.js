@@ -168,7 +168,6 @@ function submitQuiz() {
 }
 
 function redoQuiz() {
-  scrollToTop();
   quizBox.innerHTML = "";
   submitBox.style.display = "none";
   resultBox.style.display = "none";
@@ -179,6 +178,7 @@ function redoQuiz() {
   quizAnswers = {};
   correctAnswers = [];
   quizId = "0";
+  scrollToTop();
 }
 
 function scrollToTop() {
