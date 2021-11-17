@@ -20,7 +20,8 @@ let quizId = "0"; // contain the id of the quiz
 let divChoice;
 let divChoiceList;
 let divAnswerBox;
-const QUIZ_API = "https://wpr-quiz-api.herokuapp.com/attempts";
+// const QUIZ_API = "https://wpr-quiz-api.herokuapp.com/attempts";
+const QUIZ_API = "http://localhost:3000/attemps";
 let SUBMIT_API;
 
 startButton.addEventListener("click", handleStart);
@@ -39,10 +40,12 @@ function handleStart() {
       return res.json();
     })
     .then((data) => {
+      console.log(data);
       quizLength = data.questions.length;
       quizQuestions = data.questions;
       quizId = data._id;
-      SUBMIT_API = `https://wpr-quiz-api.herokuapp.com/attempts/${quizId}/submit`;
+      console.log(quizId);
+      SUBMIT_API = `http://localhost:3000/attempts/${quizId}/submit`;
       // create box for each question
       quizQuestions.map((question, index) => {
         renderAnswerBox(question, index);
